@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();  // Definindo o jsonParser
 const { Hotel, Room, Rating } = require('../models'); // Importa os modelos Hotel, Room e Rating
 const HotelService = require('../services/HotelService');
 const hotelService = new HotelService();
@@ -79,7 +81,7 @@ router.delete('/:id', async (req, res) => {
 router.post('/:hotelId/rate', jsonParser, async function(req, res) {
     try {
         let value = req.body.Value;
-        await hotelService.makeARate(1, req.params.hotelId, value);
+        await hotelService.makeARate(1, req.params.hotelId, value);  // Usando 1 como UserId para testes
         res.redirect(`/hotels/${req.params.hotelId}`);
     } catch (error) {
         res.status(500).json({ error: "Erro ao avaliar o hotel", message: error.message });
@@ -87,6 +89,10 @@ router.post('/:hotelId/rate', jsonParser, async function(req, res) {
 });
 
 module.exports = router;
+
+
+
+
 
 
 

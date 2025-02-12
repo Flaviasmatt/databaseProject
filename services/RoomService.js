@@ -1,28 +1,59 @@
-const { sequelize } = require("../models");
-
 class RoomService {
     constructor(db) {
         this.client = db.sequelize;
         this.Room = db.Room;
+        this.User = db.User;
+        this.Hotel = db.Hotel;
         this.Reservation = db.Reservation;
     }
 
-    // Alugar um quarto especificado usando SQL direto
-    async rentARoom(userId, roomId, startDate, endDate) {
-        try {
-            await sequelize.query('INSERT INTO reservations (StartDate, EndDate, RoomId, UserId) VALUES (:StartDate, :EndDate, :RoomId, :UserId)', {
-                replacements: {
-                    StartDate: startDate,
-                    EndDate: endDate,
-                    RoomId: roomId,
-                    UserId: userId
+    // Retrieve all rooms with associated users and hotel data
+    async get() {
+        return this.Room.findAll({
+            include: [
+                {
+                    model: this.User,
+                    through: {
+                        attributes: ['StartDate', 'EndDate']
+                    }
+                },
+                {
+                    model: this.Hotel
                 }
-            });
-            console.log("Room rented successfully");
-        } catch (err) {
-            throw new Error('Erro ao fazer a reserva: ' + err.message);
-        }
+            ]
+        });
+    }
+
+    // Retrieve rooms for a specific hotel with associated users and hotel data
+    async getHotelRooms(hotelId) {
+        return this.Room.findAll({
+            where: {
+                HotelId: hotelId
+            },
+            include: [
+                {
+                    model: this.User,
+                    through: {
+                        attributes: ['StartDate', 'EndDate']
+                    }
+                },
+                {
+                    model: this.Hotel
+                }
+            ]
+        });
+    }
+
+    // Rent a room for a user
+    async rentARoom(userId, roomId, startDate, endDate) {
+        await this.Reservation.create({
+            UserId: userId,
+            RoomId: roomId,
+            StartDate: startDate,
+            EndDate: endDate
+        });
     }
 }
 
 module.exports = RoomService;
+

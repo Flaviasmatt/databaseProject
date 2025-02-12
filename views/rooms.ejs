@@ -8,6 +8,7 @@
     <link href="/stylesheets/rooms.css" rel="stylesheet">
 </head>
 <body>
+    <%- include('navbar')
     <div class="container">
         <h2 class="p-3">Choose a Room</h2>
 
@@ -15,26 +16,26 @@
             <p class="text-danger">No rooms available.</p>
         <% } else { %>
             <div class="list-group">
-                <% rooms.forEach(function(room) { 
-                    let roomClass = room.Users && room.Users.filter(user => user.id == 1).length > 0 ? 'bg-warning' : 'bg-info';
-                %>
-                    <div class="row align-items-center px-3 py-1 w-100 <%= roomClass %>">
-                        <span class="col py-1">
+                <% rooms.forEach(function(room) { %>
+                    <div class="row align-items-center px-3 py-1 w-100">
+                        <span class="col py-1 <%= room.Users && room.Users.filter(user => user.id == 1).length > 0 ? 'bg-warning' : 'bg-info' %>">
                             Room for <%= room.Capacity %> people
                             <span class="right">Daily cost: <%= room.PricePerDay %></span>
                         </span>
                         <div class="col-6 d-flex justify-content-end">
                             <button onclick="makeReservation(1, '<%= room.id %>', '/rooms/reservation')" class="btn btn-secondary mx-1">Rent a room</button>
                         </div>
+                        <!-- Add Hotel Details link after the "Rent a room" button -->
+                        <a href="/hotels/<%= room.Hotel.id %>" class="col btn btn-secondary">Hotel Details</a>
                     </div>
                 <% }); %>
             </div>
         <% } %>
     </div>
-
     <script src="/javascripts/makeReservation.js"></script>
 </body>
 </html>
+
 
 
 

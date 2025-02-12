@@ -1,17 +1,17 @@
-const { sequelize } = require("../models");
+const { sequelize } = require('../models'); // Importando o sequelize corretamente de models/index.js
 const { QueryTypes } = require('sequelize');
 
 class HotelService {
-    constructor(db) {
-        this.client = db.sequelize;
-        this.Hotel = db.Hotel;
-        this.Rate = db.Rate;
-        this.User = db.User;
+    constructor() {
+        // Agora, usamos diretamente sequelize
+        this.client = sequelize; 
+        this.Hotel = require('../models').Hotel;
+        this.Rate = require('../models').Rate;
+        this.User = require('../models').User;
     }
 
     // Função para obter os detalhes do hotel, incluindo a média de avaliação
     async getHotelDetails(hotelId) {
-        // Recupera os dados do hotel e a média de avaliações
         const hotel = await sequelize.query(
             'SELECT h.id, h.Name, h.Location, ROUND(AVG(r.Value), 1) AS AvgRate ' +
             'FROM hotels h LEFT JOIN rates r ON h.id = r.HotelId ' +
@@ -20,14 +20,12 @@ class HotelService {
                 type: QueryTypes.SELECT
         });
 
-        // Recupera a contagem de avaliações feitas por um usuário
         const userRateCount = await sequelize.query(
             'SELECT COUNT(*) as Rated FROM rates WHERE HotelId = :hotelId AND UserId = :userId;', {
                 replacements: { hotelId: hotelId, userId: 1 },
                 type: QueryTypes.SELECT
         });
 
-        // Verifica se o usuário já avaliou este hotel
         if (userRateCount[0].Rated > 0) {
             hotel[0].Rated = true;
         } else {
@@ -56,6 +54,8 @@ class HotelService {
 }
 
 module.exports = HotelService;
+
+
 
 
 

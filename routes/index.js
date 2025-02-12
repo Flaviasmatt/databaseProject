@@ -1,22 +1,22 @@
-const { Sequelize } = require('sequelize');
-require('dotenv').config();
+const express = require('express');
+const router = express.Router();
 
-const sequelize = new Sequelize(
-    process.env.DB_NAME,
-    process.env.DB_USER,
-    process.env.DB_PASSWORD,
-    {
-        host: process.env.DB_HOST,
-        dialect: 'mysql',
-        logging: false,
-    }
-);
+// Importando as rotas específicas
+const hotelsRouter = require('./hotels');  // Rota para hotéis
+const roomsRouter = require('./rooms');    // Rota para quartos
+const ratesRouter = require('./rates');    // Rota para avaliações
 
-const Hotel = require('./hotel')(sequelize);
+// Definindo a rota base para redirecionar as outras
+router.get('/', (req, res) => {
+  res.send('Welcome to the Hotel Management System');
+});
 
-sequelize.sync({ alter: true }) // Garante que as tabelas estão criadas
-    .then(() => console.log('Banco de dados sincronizado com sucesso.'))
-    .catch(err => console.error('Erro ao sincronizar DB:', err));
+// Usando as rotas específicas
+router.use('/hotels', hotelsRouter);   // Prefixo para todas as rotas de hotéis
+router.use('/rooms', roomsRouter);     // Prefixo para todas as rotas de quartos
+router.use('/rates', ratesRouter);     // Prefixo para todas as rotas de avaliações
 
-module.exports = { sequelize, Hotel };
+module.exports = router;
+
+
 

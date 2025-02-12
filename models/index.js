@@ -14,7 +14,7 @@ const sequelize = new Sequelize({
 });
 
 const db = {};
-db.sequelize = sequelize;
+db.sequelize = sequelize;  // Isso é o que precisa estar aqui
 
 fs.readdirSync(__dirname)
   .filter((file) => {
@@ -33,5 +33,6 @@ Object.keys(db).forEach((modelName) => {
 });
 
 module.exports = db;
+
 
 
