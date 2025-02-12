@@ -1,29 +1,19 @@
-module.exports = (sequelize, DataTypes) => {
-  const Reservation = sequelize.define("Reservation", {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
+const { Sequelize, DataTypes } = require("sequelize"); // Importando explicitamente Sequelize e DataTypes
+
+module.exports = (sequelize) => {
+  const Reservation = sequelize.define('Reservation', {
+    StartDate: {
+      type: DataTypes.DATE, // Corrigido para usar DataTypes diretamente
+      allowNull: false
     },
-    startDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    endDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
+    EndDate: {
+      type: DataTypes.DATE, // Corrigido para usar DataTypes diretamente
+      allowNull: false
     }
   }, {
-    timestamps: false
+    timestamps: false,
+    hasTrigger: true
   });
-
-  // Definir associações
-  Reservation.associate = function(models) {
-    Reservation.belongsTo(models.User, { foreignKey: "UserId", onDelete: "CASCADE" });
-    Reservation.belongsTo(models.Room, { foreignKey: "RoomId", onDelete: "CASCADE" });
-  };
 
   return Reservation;
 };
-
-  

@@ -1,0 +1,21 @@
+button {
+    max-width: 150px!important;
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.right {
+    float: right;
+    font-weight: bold;
+}
+
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.row {
+    margin-bottom: 15px;
+}

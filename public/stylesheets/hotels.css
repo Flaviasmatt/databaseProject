@@ -1,0 +1,38 @@
+a, button {
+    max-width: 150px !important;
+    min-width: 120px;
+    height: 40px;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Melhor alinhamento para localização do hotel */
+.right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* Estilização para o botão de adicionar hotel */
+.add-hotel-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+.add-hotel-btn:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+

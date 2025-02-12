@@ -1,24 +1,24 @@
-module.exports = (sequelize, DataTypes) => {
-  const Hotel = sequelize.define("Hotel", {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    location: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    }
-  }, {
-    timestamps: false
-  });
+const { DataTypes } = require('sequelize');
 
-  // Definir associações
-  Hotel.associate = function(models) {
-    Hotel.hasMany(models.Room);
-    Hotel.belongsToMany(models.User, { through: models.Rate });
-  };
-
-  return Hotel;
+module.exports = (sequelize) => {
+    return sequelize.define('Hotel', {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true
+        },
+        Name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        Location: {
+            type: DataTypes.STRING,
+            allowNull: false
+        }
+    }, {
+        timestamps: false,
+        tableName: 'Hotels'
+    });
 };
 
   

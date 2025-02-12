@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/stylesheets/rooms.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <h2 class="p-3">Rent this Room</h2>
+      <div>
+        <h4>Room for <%= room.Capacity %> people</h4>
+        <p>Daily Cost: <%= room.PricePerDay %></p>
+      </div>
+      <form action="/rooms/rent/<%= room.id %>" method="POST">
+        <input type="text" name="userName" placeholder="Your Name" class="form-control mb-2" required>
+        <input type="email" name="userEmail" placeholder="Your Email" class="form-control mb-2" required>
+        <button type="submit" class="btn btn-success">Confirm Rent</button>
+      </form>
+    </div>
+  </body>
+</html>

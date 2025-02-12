@@ -1,55 +1,37 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
+const cors = require('cors'); // Middleware CORS
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var reservationsRouter = require('./routes/reservations');
-var app = express();
+const app = express();
 
-// Importar a conexão com o banco de dados
-const db = require("./models");
-
-// Sincronizar o banco de dados e criar tabelas (se ainda não existirem)
-db.sequelize.sync({ force: false })
-    .then(() => {
-        console.log("Banco de dados sincronizado com sucesso!");
-    })
-    .catch((error) => {
-        console.error("Erro ao sincronizar o banco de dados:", error);
-    });
-
-// Configuração da view engine
-app.set('views', path.join(__dirname, 'views'));
+// Defina o EJS como motor de templates
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));  // Diretório onde estão as views
 
-// Middlewares
-app.use('/reservations', reservationsRouter);
+// Outros middlewares
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());  // Middleware CORS para permitir o acesso entre origens
 
-// Rotas
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// Configuração das rotas
+const hotelsRouter = require('./routes/hotels');
+app.use('/hotels', hotelsRouter);  // Registrando a rota /hotels
 
-// Captura de erro 404 e encaminha para o tratador de erros
-app.use(function(req, res, next) {
-  next(createError(404));
+// Middleware para tratar 404 (Página não encontrada)
+app.use((req, res, next) => {
+    res.status(404).render('error', { message: 'Page not found', error: {} });
 });
 
-// Tratador de erros
-app.use(function(err, req, res, next) {
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // Renderiza a página de erro
-  res.status(err.status || 500);
-  res.render('error');
+// Middleware para tratamento global de erros
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(err.status || 500).render('error', {
+        message: err.message || 'Internal Server Error',
+        error: err || {}  // Passando o objeto de erro para a view
+    });
 });
 
 module.exports = app;
